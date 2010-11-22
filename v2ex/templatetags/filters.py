@@ -38,6 +38,19 @@ def clly(value):
         return value
 register.filter(clly)
 
+# auto convert http://a1.phobos.apple.com/us/r1000/abcd links to image tags
+def applepic(value):
+    imgs = re.findall('(http://a1.phobos.apple.com/us/r1000/[a-zA-Z0-9\.\-\_\/]+.jpg)\s?', value)
+    if (len(imgs) > 0):
+        for img in imgs:
+            img_id = re.findall('http://a1.phobos.apple.com/us/r1000/([a-zA-Z0-9\.\-\_\/]+).jpg', img)
+            if (img_id[0] != 'demo' and img_id[0] != 'whatever'):
+                value = value.replace('http://a1.phobos.apple.com/us/r1000/' + img_id[0] + '.jpg', '<img src="http://zdxproxy.appspot.com/a1.phobos.apple.com/us/r1000/' + img_id[0] + '.jpg" class="imgly" border="0" />')
+        return value
+    else:
+        return value
+register.filter(applepic)
+
 # auto convert youtube.com links to player
 def youtube(value):
     videos = re.findall('(http://www.youtube.com/watch\?v=[a-zA-Z0-9\-\_]+)\s?', value)
